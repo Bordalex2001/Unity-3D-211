@@ -11,6 +11,7 @@ public class CameraScript : MonoBehaviour
     private float sensitivityW = -3.0f;
     private float minFpvDistance = 0.9f;
     private float maxFpvDistance = 9.0f;
+    private float maxDistanceToCharacter = 10.0f;
     private bool isPos3;
 
     void Start()
@@ -27,7 +28,9 @@ public class CameraScript : MonoBehaviour
         Vector2 wheel = Input.mouseScrollDelta;
         if (wheel.y != 0)
         {
-            if (r.magnitude >= maxFpvDistance)
+            float currentMaxDistance = isPos3 ? maxFpvDistance : maxDistanceToCharacter;
+
+            if (r.magnitude >= currentMaxDistance)
             {
                 isPos3 = true;
                 if (wheel.y > 0)
@@ -67,8 +70,15 @@ public class CameraScript : MonoBehaviour
                 cameraAngles.x += lookValue.y * Time.deltaTime * sensitivityW;
                 cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
 
-                //Обмеження зміни кута камери за вертикаллю за рухом миші                           
-                cameraAngles.x = Mathf.Clamp(cameraAngles.x, 35f, 75f);
+                //Обмеження зміни кута камери за вертикаллю у залежності від режиму її роботи
+                if (isPos3)
+                {
+                    cameraAngles.x = Mathf.Clamp(cameraAngles.x, -10f, 40f);
+                }
+                else
+                {
+                    cameraAngles.x = Mathf.Clamp(cameraAngles.x, 35f, 75f);
+                }
 
                 transform.eulerAngles = cameraAngles;
             }
