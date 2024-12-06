@@ -71,11 +71,11 @@ public class CameraScript : MonoBehaviour
                 cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
 
                 //Обмеження зміни кута камери за вертикаллю у залежності від режиму її роботи
-                if (isPos3)
+                if (isPos3) //режим FPV
                 {
                     cameraAngles.x = Mathf.Clamp(cameraAngles.x, -10f, 40f);
                 }
-                else
+                else //Звичайний режим
                 {
                     cameraAngles.x = Mathf.Clamp(cameraAngles.x, 35f, 75f);
                 }
