@@ -5,28 +5,35 @@ public class ToastScript : MonoBehaviour
 {
     private static ToastScript instance;
     private TMPro.TextMeshProUGUI toastTMP;
-    private float timeout = 5.0f;
+    private readonly float timeout = 5.0f;
     private float leftTime;
     private GameObject content;
     private readonly Queue<ToastMessage> messages = new Queue<ToastMessage>();
 
-    public static void ShowToast(string message, float? timeout = null)
+    public static void ShowToast(string message, string author = null, float? timeout = null)
     {
-        if (instance.messages.Count > 0 &&
-            instance.messages.Peek().message == message)
+        foreach (ToastMessage m in instance.messages)
         {
-            return;
+            if (m.author == author && m.message == message)
+            {
+                return;
+            }
         }
+
         instance.messages.Enqueue(new ToastMessage
-        {
-            message = message,
-            timeout = timeout ?? instance.timeout
+        { 
+            author = author,
+            message = message, 
+            timeout = timeout ?? instance.timeout 
         });
     }
 
     void Start()
     {
-        
+        instance = this;
+        content = transform.Find("Content").gameObject;
+        toastTMP = transform.Find("Content/ToastTMP").GetComponent<TMPro.TextMeshProUGUI>();
+        content.SetActive(false);
     }
 
     void Update()
@@ -45,7 +52,8 @@ public class ToastScript : MonoBehaviour
             if (messages.Count > 0)
             {
                 ToastMessage m = messages.Peek();
-                toastTMP.text = m.message;
+                toastTMP.text = !string.IsNullOrEmpty(m.author) ?
+                    $"{m.author}: {m.message}" : m.message;
                 leftTime = m.timeout;
                 content.SetActive(true);
             }
@@ -54,6 +62,7 @@ public class ToastScript : MonoBehaviour
 
     private class ToastMessage
     {
+        public string author { get; set; }
         public string message { get; set; }
         public float timeout { get; set; }
     }
