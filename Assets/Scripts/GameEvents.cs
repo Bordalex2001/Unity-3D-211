@@ -1,6 +1,9 @@
 namespace GameEvents
 {
-    public interface INotifier { string message { get; } }
+    public interface INotifier 
+    { 
+        string message { get; } 
+    }
 
     public class MessageEvent : INotifier
     {

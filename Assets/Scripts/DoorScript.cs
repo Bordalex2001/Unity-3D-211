@@ -34,6 +34,7 @@ public class DoorScript : MonoBehaviour
             }
         }
     }
+
     void Start()
     {
         
