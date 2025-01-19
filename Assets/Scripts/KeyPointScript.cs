@@ -29,10 +29,18 @@ public class KeyPointScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Character")
+        if (other.gameObject.CompareTag("Player"))
         {
             GameState.collectedItems.Add("Key" + keyPointName, part);
-            GameState.TriggerGameEvent("KeyPoint", keyPointName);
+            GameState.TriggerGameEvent(
+                "KeyPoint",
+                new GameEvents.MessageEvent
+                {
+                    message = "Підібрано ключ " + keyPointName,
+                    data = part
+                }
+            );
+            Destroy(gameObject);
         }
     }
 }

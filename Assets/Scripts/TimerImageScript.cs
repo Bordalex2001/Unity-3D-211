@@ -6,10 +6,11 @@ public class TimerImageScript : MonoBehaviour
 {
     private Image image;
     private KeyPointScript keyPointScript;
+
     void Start()
     {
         image = GetComponent<Image>();
-        Transform t = this.transform;
+        Transform t = transform;
         while (t != null && 
             (keyPointScript = t.gameObject.GetComponent<KeyPointScript>()) == null)
         {
@@ -22,7 +23,6 @@ public class TimerImageScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (keyPointScript != null)

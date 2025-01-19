@@ -5,11 +5,13 @@ public class NewMonoBehaviourScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
+    private float batteryCharge;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
+        batteryCharge = 1.0f;
     }
 
     void Update()
@@ -28,14 +30,26 @@ public class NewMonoBehaviourScript : MonoBehaviour
         r.Normalize();
 
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        rb.AddForce(250 * Time.deltaTime * (r * moveValue.x + f * moveValue.y));
+        rb.AddForce(250 * Time.deltaTime * 
+            (
+                r * moveValue.x + 
+                f * moveValue.y
+            )
+        );
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (GameObject.FindWithTag("Battery"))
+        if (other.gameObject.CompareTag("Battery"))
         {
-            FlashLightState.charge += 1.0f;
+            GameState.TriggerGameEvent(
+                "Battery",
+                new GameEvents.MessageEvent {
+                    message = "Заряд ліхтарика збільшено на " + batteryCharge,
+                    data = batteryCharge
+                }
+            );
+            FlashLightState.charge += batteryCharge;
             Destroy(other.gameObject);
         }
     }

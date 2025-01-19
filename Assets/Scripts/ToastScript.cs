@@ -5,7 +5,7 @@ public class ToastScript : MonoBehaviour
 {
     private static ToastScript instance;
     private TMPro.TextMeshProUGUI toastTMP;
-    private readonly float timeout = 5.0f;
+    private readonly float timeout = 2.0f;
     private float leftTime;
     private GameObject content;
     private readonly Queue<ToastMessage> messages = new Queue<ToastMessage>();
@@ -28,12 +28,21 @@ public class ToastScript : MonoBehaviour
         });
     }
 
+    private void OnGameEvent(string eventName, object data)
+    {
+        if (data is GameEvents.INotifier n)
+        {
+            ShowToast(n.message);
+        }
+    }
+
     void Start()
     {
         instance = this;
         content = transform.Find("Content").gameObject;
         toastTMP = transform.Find("Content/ToastTMP").GetComponent<TMPro.TextMeshProUGUI>();
         content.SetActive(false);
+        GameState.Subscribe(OnGameEvent);
     }
 
     void Update()
@@ -58,6 +67,11 @@ public class ToastScript : MonoBehaviour
                 content.SetActive(true);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnGameEvent);
     }
 
     private class ToastMessage

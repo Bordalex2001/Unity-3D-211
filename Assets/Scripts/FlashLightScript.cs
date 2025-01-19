@@ -4,7 +4,7 @@ public class FlashLightScript : MonoBehaviour
 {
     private Transform parentTransform;
     private Light flashLight;
-    private bool isFlashLightOn;
+    public bool isFlashLightOn;
 
     void Start()
     {
@@ -14,7 +14,6 @@ public class FlashLightScript : MonoBehaviour
             Debug.LogError("FlashLightScript: parentTransform not found");
         }
         flashLight = GetComponent<Light>();
-        isFlashLightOn = true;
         FlashLightState.charge = 2.0f;
     }
 
@@ -23,7 +22,7 @@ public class FlashLightScript : MonoBehaviour
     {
         if (parentTransform == null) return;
 
-        if (FlashLightState.charge > 0 && !GameState.isDay && isFlashLightOn)
+        if (FlashLightState.charge > 0 && !GameState.isDay)
         {
             flashLight.intensity = FlashLightState.charge;
             FlashLightState.charge -= Time.deltaTime / FlashLightState.runTime;
