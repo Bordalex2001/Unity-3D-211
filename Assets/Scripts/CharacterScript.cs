@@ -1,17 +1,15 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.InputSystem;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
-    private float batteryCharge;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
-        batteryCharge = 1.0f;
     }
 
     void Update()
@@ -36,21 +34,5 @@ public class NewMonoBehaviourScript : MonoBehaviour
                 f * moveValue.y
             )
         );
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Battery"))
-        {
-            GameState.TriggerGameEvent(
-                "Battery",
-                new GameEvents.MessageEvent {
-                    message = "Заряд ліхтарика збільшено на " + batteryCharge,
-                    data = batteryCharge
-                }
-            );
-            FlashLightState.charge += batteryCharge;
-            Destroy(other.gameObject);
-        }
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class KeyPointScript : MonoBehaviour
 {
@@ -36,7 +36,7 @@ public class KeyPointScript : MonoBehaviour
                 "KeyPoint",
                 new GameEvents.MessageEvent
                 {
-                    message = "Ï³ä³áðàíî êëþ÷ " + keyPointName,
+                    message = "ÐŸÑ–Ð´Ñ–Ð±Ñ€Ð°Ð½Ð¾ ÐºÐ»ÑŽÑ‡ " + keyPointName,
                     data = part
                 }
             );
