@@ -6,15 +6,25 @@ public class BatteryScript : MonoBehaviour
     private float batteryCharge = 0.5f;
     [SerializeField]
     private bool isRandomCharge = false;
+    private AudioSource collectSound;
+    private float destroyTimeout;
 
     void Start()
     {
-        
+        collectSound = GetComponent<AudioSource>();
+        destroyTimeout = 0f;
     }
 
     void Update()
     {
-        
+        if (destroyTimeout > 0f)
+        {
+            destroyTimeout -= Time.deltaTime;
+            if (destroyTimeout <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -22,6 +32,7 @@ public class BatteryScript : MonoBehaviour
         if (isRandomCharge) batteryCharge = Random.Range(0.3f, 1.0f);
         if (other.gameObject.CompareTag("Player"))
         {
+            collectSound.Play();
             GameState.TriggerGameEvent(
                 "Battery",
                 new GameEvents.MessageEvent
@@ -30,8 +41,9 @@ public class BatteryScript : MonoBehaviour
                     data = batteryCharge
                 }
             );
+
             FlashLightState.charge += batteryCharge;
-            Destroy(gameObject);
+            destroyTimeout = .6f;
         }
     }
 }

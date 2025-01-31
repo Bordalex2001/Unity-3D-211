@@ -7,6 +7,8 @@ public class KeyPointScript : MonoBehaviour
     [SerializeField]
     private float timeout = 5.0f;
     private float leftTime;
+    private AudioSource successSound;
+    private AudioSource failureSound;
 
     public float part;
 
@@ -15,6 +17,10 @@ public class KeyPointScript : MonoBehaviour
     {
         leftTime = timeout;
         part = 1.0f;
+
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        successSound = audioSources[0];
+        failureSound = audioSources[1];
     }
 
     void Update()
@@ -31,6 +37,17 @@ public class KeyPointScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            bool isSuccess = leftTime > 0;
+
+            if (isSuccess)
+            {
+                successSound.Play();
+            }
+            else
+            {
+                failureSound.Play();
+            }
+            
             GameState.collectedItems.Add("Key" + keyPointName, part);
             GameState.TriggerGameEvent(
                 "KeyPoint",
@@ -40,6 +57,7 @@ public class KeyPointScript : MonoBehaviour
                     data = part
                 }
             );
+
             Destroy(gameObject);
         }
     }
