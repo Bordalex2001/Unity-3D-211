@@ -58,7 +58,7 @@ public class KeyPointScript : MonoBehaviour
                 }
             );
 
-            Destroy(gameObject);
+            Destroy(gameObject, .6f);
         }
     }
 }

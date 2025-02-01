@@ -5,8 +5,9 @@ public class FlashLightScript : MonoBehaviour
     private Transform parentTransform;
     private Light flashLight;
     public bool isFlashLightOn;
+    public AudioSource switchFlashLightSound;
 
-    public float chargeLevel => Mathf.Clamp01(FlashLightState.charge);
+    public float chargeLevel => FlashLightState.charge;
 
     void Start()
     {
@@ -17,6 +18,8 @@ public class FlashLightScript : MonoBehaviour
         }
         flashLight = GetComponent<Light>();
         FlashLightState.charge = 2.0f;
+        isFlashLightOn = false;
+        switchFlashLightSound = GetComponent<AudioSource>();
         GameState.Subscribe(OnBatteryEvent, "Battery");
     }
 
@@ -25,7 +28,7 @@ public class FlashLightScript : MonoBehaviour
     {
         if (parentTransform == null) return;
 
-        if (FlashLightState.charge > 0 && !GameState.isDay)
+        if (FlashLightState.charge > 0 && !GameState.isDay && isFlashLightOn)
         {
             flashLight.intensity = chargeLevel;
             FlashLightState.charge -= Time.deltaTime / FlashLightState.runTime;
@@ -45,6 +48,7 @@ public class FlashLightScript : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.F))
         {
+            switchFlashLightSound.Play();
             if (flashLight.enabled == true)
             {
                 flashLight.enabled = false;
