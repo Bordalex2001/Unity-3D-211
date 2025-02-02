@@ -19,8 +19,12 @@ public class FlashLightScript : MonoBehaviour
         flashLight = GetComponent<Light>();
         FlashLightState.charge = 2.0f;
         isFlashLightOn = false;
+        
         switchFlashLightSound = GetComponent<AudioSource>();
+        switchFlashLightSound.volume = GameState.effectsVolume;
+
         GameState.Subscribe(OnBatteryEvent, "Battery");
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     
@@ -70,8 +74,17 @@ public class FlashLightScript : MonoBehaviour
         }
     }
 
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "EffectsVolume")
+        {
+            switchFlashLightSound.volume = (float)data;
+        }
+    }
+
     private void OnDestroy()
     {
         GameState.Unsubscribe(OnBatteryEvent, "Battery");
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

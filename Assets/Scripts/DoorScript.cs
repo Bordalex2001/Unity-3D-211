@@ -46,6 +46,10 @@ public class DoorScript : MonoBehaviour
         AudioSource[] audioSources = GetComponents<AudioSource>();
         closedSound = audioSources[0];
         openSound = audioSources[1];
+
+        closedSound.volume = GameState.effectsVolume;
+        openSound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update()
@@ -55,5 +59,19 @@ public class DoorScript : MonoBehaviour
             transform.Translate(Time.deltaTime / openingTime, 0, 0);
             timeout -= Time.deltaTime;
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "EffectsVolume")
+        {
+            closedSound.volume = (float)data;
+            openSound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

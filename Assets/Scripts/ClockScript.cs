@@ -10,7 +10,6 @@ public class ClockScript : MonoBehaviour
         clock = GetComponent<TMPro.TextMeshProUGUI>();
         gameTime = 0f;
     }
-
     
     void Update()
     {

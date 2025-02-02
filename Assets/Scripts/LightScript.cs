@@ -19,6 +19,13 @@ public class LightScript : MonoBehaviour
         dayAmbientSound = audioSources[1];
         nightAmbientSound = audioSources[2];
 
+        switchLightSound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
+
+        dayAmbientSound.volume = GameState.ambientVolume;
+        nightAmbientSound.volume = GameState.ambientVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "AmbientVolume");
+
         SwitchLight();
     }
 
@@ -53,5 +60,24 @@ public class LightScript : MonoBehaviour
             nightAmbientSound.Play();
             dayAmbientSound.Stop();
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "AmbientVolume")
+        {
+            dayAmbientSound.volume = (float)data;
+            nightAmbientSound.volume = (float)data;
+        }
+        else if (eventName == "EffectsVolume")
+        {
+            switchLightSound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "AmbientVolume");
     }
 }

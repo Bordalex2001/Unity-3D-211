@@ -6,8 +6,10 @@ public class GameState
 {
     public static bool isDay { get; set; }
     public static bool isFpv { get; set; }
-
     public static Dictionary<String, object> collectedItems { get; set; } = new();
+
+    public static float effectsVolume { get; set; }
+    public static float ambientVolume { get; set; }
 
     #region Game events
     private const string broadcastKey = "Broadcast";

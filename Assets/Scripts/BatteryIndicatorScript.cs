@@ -20,6 +20,10 @@ public class BatteryIndicatorScript : MonoBehaviour
         AudioSource[] audioSources = GetComponents<AudioSource>();
         lowBatterySound = audioSources[0];
         criticalLowBatterySound = audioSources[1];
+
+        lowBatterySound.volume = GameState.effectsVolume;
+        criticalLowBatterySound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update()
@@ -50,5 +54,19 @@ public class BatteryIndicatorScript : MonoBehaviour
             criticalLowBatterySound.Play();
             hasCriticalLowBattery = true;
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "EffectsVolume")
+        {
+            lowBatterySound.volume = (float)data;
+            criticalLowBatterySound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class CharacterScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
@@ -14,7 +14,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     void Update()
     {
-        // Projections:
         Vector3 f = Camera.main.transform.forward;
         f.y = 0.0f;
         if (f == Vector3.zero)

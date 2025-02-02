@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class FlashLightState
 {
     public static float charge { get; set; }

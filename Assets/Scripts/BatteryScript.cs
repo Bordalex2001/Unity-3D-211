@@ -13,6 +13,8 @@ public class BatteryScript : MonoBehaviour
     {
         collectSound = GetComponent<AudioSource>();
         destroyTimeout = 0f;
+        collectSound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update()
@@ -32,6 +34,7 @@ public class BatteryScript : MonoBehaviour
         if (isRandomCharge) batteryCharge = Random.Range(0.3f, 1.0f);
         if (other.gameObject.CompareTag("Player"))
         {
+            //collectSound.volume = GameState.effectsVolume;
             collectSound.Play();
             GameState.TriggerGameEvent(
                 "Battery",
@@ -45,5 +48,18 @@ public class BatteryScript : MonoBehaviour
             FlashLightState.charge += batteryCharge;
             destroyTimeout = .6f;
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "EffectsVolume")
+        {
+            collectSound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

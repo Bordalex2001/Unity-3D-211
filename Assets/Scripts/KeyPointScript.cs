@@ -12,7 +12,6 @@ public class KeyPointScript : MonoBehaviour
 
     public float part;
 
-
     void Start()
     {
         leftTime = timeout;
@@ -21,6 +20,10 @@ public class KeyPointScript : MonoBehaviour
         AudioSource[] audioSources = GetComponents<AudioSource>();
         successSound = audioSources[0];
         failureSound = audioSources[1];
+
+        successSound.volume = GameState.effectsVolume;
+        failureSound.volume = GameState.effectsVolume;
+        GameState.Subscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 
     void Update()
@@ -60,5 +63,19 @@ public class KeyPointScript : MonoBehaviour
 
             Destroy(gameObject, .6f);
         }
+    }
+
+    private void OnSoundsVolumeTrigger(string eventName, object data)
+    {
+        if (eventName == "EffectsVolume")
+        {
+            successSound.volume = (float)data;
+            failureSound.volume = (float)data;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameState.Unsubscribe(OnSoundsVolumeTrigger, "EffectsVolume");
     }
 }

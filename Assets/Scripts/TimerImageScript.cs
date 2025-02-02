@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class TimerImageScript : MonoBehaviour
 {
     private Image image;
