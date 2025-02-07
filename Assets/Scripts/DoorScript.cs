@@ -16,7 +16,7 @@ public class DoorScript : MonoBehaviour
             if (GameState.collectedItems.ContainsKey("Key" + requiredKey))
             {
                 GameState.TriggerGameEvent(
-                    "Door1:", 
+                    "Door:", 
                     new GameEvents.MessageEvent { 
                         message = "Двері відчиняються",
                         data = requiredKey

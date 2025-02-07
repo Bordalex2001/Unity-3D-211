@@ -7,8 +7,6 @@ public class CameraScript : MonoBehaviour
     private Vector3 cameraAngles, cameraAngles0;
     private Transform character;
     private Vector3 r;
-    private float sensitivityH = 5.0f;
-    private float sensitivityW = -3.0f;
     private float minFpvDistance = 0.9f;
     private float maxFpvDistance = 9.0f;
     private float maxDistanceToCharacter = 20.0f;
@@ -51,7 +49,7 @@ public class CameraScript : MonoBehaviour
                     }
                     else
                     {
-                        r *= (1 - wheel.y / 10);
+                        r *= 1 - wheel.y / 10;
                     }
                 }
                 else
@@ -69,8 +67,8 @@ public class CameraScript : MonoBehaviour
             Vector2 lookValue = lookAction.ReadValue<Vector2>();
             if (lookValue != Vector2.zero)
             {
-                cameraAngles.x += lookValue.y * Time.deltaTime * sensitivityW;
-                cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
+                cameraAngles.x += lookValue.y * Time.deltaTime * GameState.lookSensitivityY;
+                cameraAngles.y += lookValue.x * Time.deltaTime * GameState.lookSensitivityX;
 
                 //Обмеження зміни кута камери за вертикаллю у залежності від режиму її роботи
                 if (isPos3) //режим FPV
