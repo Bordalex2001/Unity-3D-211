@@ -6,24 +6,33 @@ public class DoorScript : MonoBehaviour
     private string requiredKey = "1";
     private float openingTime = 3.0f;
     private float timeout = 0f;
+    private float openedPart = 0.5f; //частина, при відкритті якої перемикається кімната (room)
+    private bool isClosed = true;
     private AudioSource closedSound;
     private AudioSource openSound;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && isClosed)
         {
             if (GameState.collectedItems.ContainsKey("Key" + requiredKey))
             {
+                bool isOnTime = (float)GameState.collectedItems["Key" + requiredKey] > 0;
                 GameState.TriggerGameEvent(
                     "Door:", 
                     new GameEvents.MessageEvent { 
-                        message = "Двері відчиняються",
+                        message = "Двері відчиняються " + (isOnTime ? "швидко" : "повільно"),
                         data = requiredKey
                     }
                 );
 
-                timeout = openingTime;
+                if (!isOnTime)
+                {
+                    openingTime *= 3;
+                }
+
+                timeout = 1.0f;
+                isClosed = false;
                 openSound.Play();
             }
             else
@@ -56,8 +65,14 @@ public class DoorScript : MonoBehaviour
     {
         if (timeout > 0f)
         {
-            transform.Translate(Time.deltaTime / openingTime, 0, 0);
-            timeout -= Time.deltaTime;
+            float t = Time.deltaTime / openingTime;
+            transform.Translate(t, 0, 0);
+
+            if (timeout >= openedPart && timeout - t < openedPart)
+            {
+                GameState.room++;
+            }
+            timeout -= t;
         }
     }
 

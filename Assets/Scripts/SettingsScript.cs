@@ -9,6 +9,7 @@ public class SettingsScript : MonoBehaviour
     private Toggle soundOffToggle;
     private Slider sensitivityXSlider;
     private Slider sensitivityYSlider;
+    private Slider fpvSlider;
     private Toggle linkToggle;
     
     void Start()
@@ -43,6 +44,11 @@ public class SettingsScript : MonoBehaviour
             .GetComponent<Toggle>();
         OnSensitivityXSliderChanged(sensitivityXSlider.value);
         if (!linkToggle.isOn) OnSensitivityYSliderChanged(sensitivityYSlider.value);
+
+        fpvSlider = contentTransform
+            .Find("Controls/FpvSlider")
+            .GetComponent<Slider>();
+        OnFpvSliderChanged(fpvSlider.value);
 
         LoadSettings();
     }
@@ -91,6 +97,12 @@ public class SettingsScript : MonoBehaviour
         {
             linkToggle.isOn = PlayerPrefs.GetInt(nameof(linkToggle)) > 0;
         }
+        if (PlayerPrefs.HasKey(nameof(fpvSlider)))
+        {
+            OnFpvSliderChanged(
+                PlayerPrefs.GetFloat(nameof(fpvSlider))
+            );
+        }
     }
 
     public void OnSaveButtonClick()
@@ -101,7 +113,13 @@ public class SettingsScript : MonoBehaviour
         PlayerPrefs.SetFloat(nameof(sensitivityXSlider), sensitivityXSlider.value);
         PlayerPrefs.SetFloat(nameof(sensitivityYSlider), sensitivityYSlider.value);
         PlayerPrefs.SetInt(nameof(linkToggle), linkToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetFloat(nameof(fpvSlider), fpvSlider.value);
         PlayerPrefs.Save();
+    }
+
+    public void OnDefaultsButtonClick()
+    {
+        PlayerPrefs.DeleteAll();
     }
 
     public void OnCloseButtonClick()
@@ -158,5 +176,11 @@ public class SettingsScript : MonoBehaviour
             sensitivityXSlider.value = value;
             GameState.lookSensitivityX = sens;
         }
+    }
+
+    public void OnFpvSliderChanged(float value)
+    {
+        fpvSlider.value = value;
+        GameState.minFpvDistance = Mathf.Lerp(0.5f, 1.5f, value);
     }
 }

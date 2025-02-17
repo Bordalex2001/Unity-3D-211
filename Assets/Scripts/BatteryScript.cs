@@ -34,7 +34,6 @@ public class BatteryScript : MonoBehaviour
         if (isRandomCharge) batteryCharge = Random.Range(0.3f, 1.0f);
         if (other.gameObject.CompareTag("Player"))
         {
-            //collectSound.volume = GameState.effectsVolume;
             collectSound.Play();
             GameState.TriggerGameEvent(
                 "Battery",

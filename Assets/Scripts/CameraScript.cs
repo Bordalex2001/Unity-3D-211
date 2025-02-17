@@ -7,9 +7,6 @@ public class CameraScript : MonoBehaviour
     private Vector3 cameraAngles, cameraAngles0;
     private Transform character;
     private Vector3 r;
-    private float minFpvDistance = 0.9f;
-    private float maxFpvDistance = 9.0f;
-    private float maxDistanceToCharacter = 20.0f;
     private bool isPos3;
 
     void Start()
@@ -26,9 +23,7 @@ public class CameraScript : MonoBehaviour
         Vector2 wheel = Input.mouseScrollDelta;
         if (wheel.y != 0)
         {
-            float currentMaxDistance = isPos3 ? maxFpvDistance : maxDistanceToCharacter;
-
-            if (r.magnitude >= currentMaxDistance)
+            if (r.magnitude >= GameState.maxFpvDistance)
             {
                 isPos3 = true;
                 if (wheel.y > 0)
@@ -39,10 +34,10 @@ public class CameraScript : MonoBehaviour
             else
             {
                 isPos3 = false;
-                if (r.magnitude >= minFpvDistance)
+                if (r.magnitude >= GameState.minFpvDistance)
                 {
                     float rr = r.magnitude * (1 - wheel.y / 10);
-                    if (rr <= minFpvDistance)
+                    if (rr <= GameState.minFpvDistance)
                     {
                         r *= 0.01f;
                         GameState.isFpv = true;
@@ -56,7 +51,7 @@ public class CameraScript : MonoBehaviour
                 {
                     if (wheel.y < 0)
                     {
-                        r *= 100f;
+                        r = r.normalized * GameState.minFpvDistance;
                         GameState.isFpv = false;
                     }
                 }
